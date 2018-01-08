@@ -3,6 +3,9 @@ package com.richard.tdd.services;
 import static com.richard.tdd.utils.DataUtils.adicionarDias;
 
 import java.util.Date;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.richard.exceptions.FilmeException;
 import com.richard.exceptions.LocadoraException;
@@ -12,22 +15,31 @@ import com.richard.tdd.modal.Usuario;
 
 public class LocacaoService {
 	
-	public Locacao alugarFilme(Usuario usuario, Filme filme) throws FilmeException, LocadoraException  {
+	public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws FilmeException, LocadoraException  {
 		
 		if (null == usuario)
 			throw new LocadoraException("Usuario vazio");
 		
-		if (null == filme)
+		if (null == filmes || filmes.isEmpty())
 			throw new LocadoraException("Filme vazio");
 		
-		if (filme.getEstoque() == 0)
+		boolean algumFilmeSemEstoque =  filmes.stream().anyMatch(new Predicate<Filme>() {
+			public boolean test(Filme input) {
+				return input.getEstoque() == 0;
+			}
+		});
+		
+		
+		if (algumFilmeSemEstoque)
 			throw new FilmeException();
 		
 		Locacao locacao = new Locacao();
-		locacao.setFilme(filme);
+		locacao.setFilmes(filmes);
 		locacao.setUsuario(usuario);
 		locacao.	setDataLocacao(new Date());
-		locacao.setValor(filme.getPrecoLocacao());
+		double valores = filmes.stream().collect(Collectors.summingDouble(f -> f.getPrecoLocacao()));	
+				
+		locacao.setValor(valores);
 
 		//Entrega no dia seguinte
 		Date dataEntrega = new Date();
