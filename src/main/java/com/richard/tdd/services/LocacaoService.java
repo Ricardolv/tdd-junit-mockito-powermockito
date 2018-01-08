@@ -4,17 +4,24 @@ import static com.richard.tdd.utils.DataUtils.adicionarDias;
 
 import java.util.Date;
 
+import com.richard.exceptions.FilmeException;
+import com.richard.exceptions.LocadoraException;
 import com.richard.tdd.modal.Filme;
 import com.richard.tdd.modal.Locacao;
 import com.richard.tdd.modal.Usuario;
 
 public class LocacaoService {
 	
-	public Locacao alugarFilme(Usuario usuario, Filme filme) throws Exception {
+	public Locacao alugarFilme(Usuario usuario, Filme filme) throws FilmeException, LocadoraException  {
 		
-		if (filme.getEstoque() == 0) {
-			throw new Exception("Filme sem estoque");
-		}
+		if (null == usuario)
+			throw new LocadoraException("Usuario vazio");
+		
+		if (null == filme)
+			throw new LocadoraException("Filme vazio");
+		
+		if (filme.getEstoque() == 0)
+			throw new FilmeException();
 		
 		Locacao locacao = new Locacao();
 		locacao.setFilme(filme);
