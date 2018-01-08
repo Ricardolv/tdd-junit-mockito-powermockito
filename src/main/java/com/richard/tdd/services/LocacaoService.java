@@ -4,17 +4,18 @@ import static com.richard.tdd.utils.DataUtils.adicionarDias;
 
 import java.util.Date;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.richard.tdd.modal.Filme;
 import com.richard.tdd.modal.Locacao;
 import com.richard.tdd.modal.Usuario;
-import com.richard.tdd.utils.DataUtils;
 
 public class LocacaoService {
 	
-	public Locacao alugarFilme(Usuario usuario, Filme filme) {
+	public Locacao alugarFilme(Usuario usuario, Filme filme) throws Exception {
+		
+		if (filme.getEstoque() == 0) {
+			throw new Exception("Filme sem estoque");
+		}
+		
 		Locacao locacao = new Locacao();
 		locacao.setFilme(filme);
 		locacao.setUsuario(usuario);
@@ -32,20 +33,4 @@ public class LocacaoService {
 		return locacao;
 	}
 
-	@Test
-	public void test() {
-		//cenario
-		LocacaoService locacaoService = new LocacaoService();
-		Usuario usuario = new Usuario("Usuario 1");
-		Filme filme = new Filme("Filme 1", 2, 5.0);
-		
-		//acao
-		Locacao locacao = locacaoService.alugarFilme(usuario, filme);
-		
-		//verificacao
-		Assert.assertTrue("Esperado o valor 5.", locacao.getValor() == 5);
-		Assert.assertTrue("Esperado que o resulto seja a mesma data.", DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
-		Assert.assertTrue("Esperado que o resulto seja a mesma data.", DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
-		
-	}
 }
