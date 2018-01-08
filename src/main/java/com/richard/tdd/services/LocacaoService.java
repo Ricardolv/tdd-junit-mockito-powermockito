@@ -17,21 +17,8 @@ public class LocacaoService {
 	
 	public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws FilmeException, LocadoraException  {
 		
-		if (null == usuario)
-			throw new LocadoraException("Usuario vazio");
-		
-		if (null == filmes || filmes.isEmpty())
-			throw new LocadoraException("Filme vazio");
-		
-		boolean algumFilmeSemEstoque =  filmes.stream().anyMatch(new Predicate<Filme>() {
-			public boolean test(Filme input) {
-				return input.getEstoque() == 0;
-			}
-		});
-		
-		
-		if (algumFilmeSemEstoque)
-			throw new FilmeException();
+		validarUsuario(usuario);
+		validarEstoque(filmes);
 		
 		Locacao locacao = new Locacao();
 		locacao.setFilmes(filmes);
@@ -50,6 +37,26 @@ public class LocacaoService {
 		//TODO adicionar método para salvar
 		
 		return locacao;
+	}
+
+	private void validarUsuario(Usuario usuario) throws LocadoraException {
+		if (null == usuario)
+			throw new LocadoraException("Usuario vazio");
+	}
+
+	private void validarEstoque(List<Filme> filmes) throws FilmeException, LocadoraException {
+		
+		if (null == filmes || filmes.isEmpty())
+			throw new LocadoraException("Filme vazio");
+		
+		boolean algumFilmeSemEstoque =  filmes.stream().anyMatch(new Predicate<Filme>() {
+			public boolean test(Filme input) {
+				return input.getEstoque() == 0;
+			}
+		});
+		
+		if (algumFilmeSemEstoque)
+			throw new FilmeException();
 	}
 
 }
