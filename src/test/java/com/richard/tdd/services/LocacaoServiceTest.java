@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import java.util.Date;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -21,19 +22,26 @@ import com.richard.tdd.utils.DataUtils;
 
 public class LocacaoServiceTest {
 	
+	private LocacaoService locacaoService;
+	private Usuario usuario;
+	private Filme filme;
+	
 	@Rule
 	public ErrorCollector error = new ErrorCollector();
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
 	
+	@Before
+	public void setup() {
+		//cenario
+		locacaoService = new LocacaoService();
+		usuario = new Usuario("Usuario 1");
+		filme = new Filme("Filme 1", 2, 5.0);
+	}
+	
 	@Test
 	public void testLocacao() throws FilmeException, LocadoraException {
-		//cenario
-		LocacaoService locacaoService = new LocacaoService();
-		Usuario usuario = new Usuario("Usuario 1");
-		Filme filme = new Filme("Filme 1", 2, 5.0);
-		
 		//acao
 		Locacao locacao = locacaoService.alugarFilme(usuario, filme);
 		
@@ -46,10 +54,7 @@ public class LocacaoServiceTest {
 	//teste de forma elegante
 	@Test(expected = FilmeException.class)
 	public void testLocacaoo_filmeSemEstoque() throws FilmeException, LocadoraException {
-		//cenario
-		LocacaoService locacaoService = new LocacaoService();
-		Usuario usuario = new Usuario("Usuario 1");
-		Filme filme = new Filme("Filme 1", 0, 5.0);
+		filme.setEstoque(0);
 		
 		//acao
 		locacaoService.alugarFilme(usuario, filme);
@@ -58,10 +63,6 @@ public class LocacaoServiceTest {
 	//teste de forma robusta
 	@Test
 	public void testLocacaoo_usuarioVazio() throws FilmeException {
-		//cenario
-		LocacaoService locacaoService = new LocacaoService();
-		Filme filme = new Filme("Filme 1", 2, 5.0);
-		
 		//acao
 		try {
 			locacaoService.alugarFilme(null, filme);
@@ -74,10 +75,6 @@ public class LocacaoServiceTest {
 	//teste de forma nova
 	@Test
 	public void testLocacaoo_filmeVazio() throws FilmeException, LocadoraException {
-		//cenario
-		LocacaoService locacaoService = new LocacaoService();
-		Usuario usuario = new Usuario("Usuario 1");
-		
 		expectedException.expect(LocadoraException.class);
 		expectedException.expectMessage("Filme vazio");
 		
