@@ -15,11 +15,11 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
-import com.richard.exceptions.FilmeException;
-import com.richard.exceptions.LocadoraException;
-import com.richard.tdd.modal.Filme;
-import com.richard.tdd.modal.Locacao;
-import com.richard.tdd.modal.Usuario;
+import com.richard.tdd.exceptions.FilmeException;
+import com.richard.tdd.exceptions.LocadoraException;
+import com.richard.tdd.model.Filme;
+import com.richard.tdd.model.Locacao;
+import com.richard.tdd.model.Usuario;
 import com.richard.tdd.utils.DataUtils;
 
 public class LocacaoServiceTest {

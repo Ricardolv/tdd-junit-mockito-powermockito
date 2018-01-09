@@ -1,4 +1,4 @@
-package com.richard.tdd.modal;
+package com.richard.tdd.model;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.richard.exceptions;
+package com.richard.tdd.exceptions;
 
 public class LocadoraException extends Exception {
 

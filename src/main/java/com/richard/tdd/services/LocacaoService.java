@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.richard.exceptions.FilmeException;
-import com.richard.exceptions.LocadoraException;
-import com.richard.tdd.modal.Filme;
-import com.richard.tdd.modal.Locacao;
-import com.richard.tdd.modal.Usuario;
+import com.richard.tdd.exceptions.FilmeException;
+import com.richard.tdd.exceptions.LocadoraException;
+import com.richard.tdd.model.Filme;
+import com.richard.tdd.model.Locacao;
+import com.richard.tdd.model.Usuario;
 
 public class LocacaoService {
 	
