@@ -32,4 +32,7 @@ public class Filme {
 	public void setPrecoLocacao(Double precoLocacao) {
 		this.precoLocacao = precoLocacao;
 	}
+	
+	
+
 }
