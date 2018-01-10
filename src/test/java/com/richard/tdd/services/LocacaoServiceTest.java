@@ -3,8 +3,10 @@ package com.richard.tdd.services;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -186,6 +188,19 @@ public class LocacaoServiceTest {
 		
 		//verificacao
 		assertThat(resultado.getValor(), is(14.0));
+	}
+	
+	@Test
+	public void deveDevolverNaSegundaAoAlgarNoSabado() throws FilmeException, LocadoraException {
+		//cenario
+		Usuario usuario = new Usuario("Usuario 1");
+		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 5.0));
+		
+		//acao 
+		Locacao retorno = locacaoService.alugarFilme(usuario, filmes);
+		
+		boolean ehSegunda  = DataUtils.verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
+		assertTrue(ehSegunda);
 	}
 	
 }
