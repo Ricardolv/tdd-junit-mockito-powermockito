@@ -2,12 +2,16 @@ package com.richard.tdd.services;
 
 import static com.richard.tdd.builders.FilmeBuilder.umFilme;
 import static com.richard.tdd.builders.FilmeBuilder.umFilmeSemEstoque;
+import static com.richard.tdd.builders.LocacaoBuilder.umLocacao;
 import static com.richard.tdd.builders.UsuarioBuilder.umUsuario;
 import static com.richard.tdd.matchers.MatchersProprios.ehHoje;
 import static com.richard.tdd.matchers.MatchersProprios.ehHojeComDiferencaDias;
+import static com.richard.tdd.utils.DataUtils.obterDataComDiferencaDias;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -35,30 +39,35 @@ import com.richard.tdd.utils.DataUtils;
 
 public class LocacaoServiceTest {
 	
-	private LocacaoService locacaoService;
-	private Usuario usuario;
-	private List<Filme> filmes;
-	
-	private LocacaoDAO dao;
-	private SPCService spcService;
-	
-	
 	@Rule
 	public ErrorCollector error = new ErrorCollector();
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
-
+	
+	private LocacaoDAO dao;
+	private SPCService spcService;
+	private EmailService emailService;
+	
+	private LocacaoService locacaoService;
+	private Usuario usuario;
+	private List<Filme> filmes;
+	
 	@Before
 	public void setup() {
 		//cenario
 		locacaoService = new LocacaoService();
 		usuario = umUsuario().agora();
 		filmes = Arrays.asList(umFilme().agora());
+		
 		dao = Mockito.mock(LocacaoDAO.class);
 		locacaoService.setDao(dao);
+		
 		spcService = Mockito.mock(SPCService.class);
 		locacaoService.setSpcService(spcService);
+		
+		emailService = Mockito.mock(EmailService.class);
+		locacaoService.setEmailService(emailService);
 	}
 	
 	/**
@@ -82,11 +91,6 @@ public class LocacaoServiceTest {
 		error.checkThat(locacao.getDataRetorno(), ehHojeComDiferencaDias(1));
 	}
 	
-	/**
-	 * Teste de forma elegante
-	 * @throws FilmeException
-	 * @throws LocadoraException
-	 */
 	@Test(expected = FilmeException.class)
 	public void naoDeveAlugarFilmeSemEstoque() throws FilmeException, LocadoraException {
 		//cenario
@@ -96,10 +100,6 @@ public class LocacaoServiceTest {
 		locacaoService.alugarFilme(usuario, filmes);
 	}
 	
-	/**
-	 * Teste de forma robusta
-	 * @throws FilmeException
-	 */
 	@Test
 	public void naoDeveAlugarFilmeSemUsuario() throws FilmeException {
 		//acao
@@ -111,11 +111,6 @@ public class LocacaoServiceTest {
 		}
 	}
 	
-    /**
-     * Teste de forma nova
-     * @throws FilmeException
-     * @throws LocadoraException
-     */
 	@Test
 	public void naoDeveAlugarFilmeSemFilme() throws FilmeException, LocadoraException {
 		expectedException.expect(LocadoraException.class);
@@ -144,18 +139,45 @@ public class LocacaoServiceTest {
 	}
 	
 	@Test
-	public void naoDeveAlugarFilmeParaNegativadoSPC() throws FilmeException, LocadoraException {
+	public void naoDeveAlugarFilmeParaNegativadoSPC() throws FilmeException {
 		//cenario
 		Usuario usuario = umUsuario().agora();
 		List<Filme> filmes = Arrays.asList(umFilme().agora()) ;
 		
 		when(spcService.possuiNegativacao(usuario)).thenReturn(true);
 		
-		expectedException.expect(LocadoraException.class);
-		expectedException.expectMessage("Usuario negativado !");
+		//acao
+		try {
+			locacaoService.alugarFilme(usuario, filmes);			
+		//verificacao
+			fail();
+		} catch (LocadoraException e) {
+			assertThat(e.getMessage(), is("Usuario negativado !"));
+		}
+		
+		verify(spcService).possuiNegativacao(usuario);
+	}
+	
+	@Test
+	public void deveEnviarEmailParaLocacoesAtrasadas() {
+		//cenario
+		Usuario usuario = umUsuario().agora();
+		List<Locacao> locacoes = Arrays.asList(umLocacao()
+												.comUsuario(usuario)
+												.comDataRetorno(obterDataComDiferencaDias(-2))
+												.agora());
+		when(dao.obterLocacoesPendentes()).thenReturn(locacoes);
 		
 		//acao
-		locacaoService.alugarFilme(usuario, filmes);
+		locacaoService.notificarAtrasos();
+		
+		//verificacao
+		verify(emailService).notificarAtraso(usuario);
+		
+	}
+
+	public void setEmailService(EmailService emailService) {
+		this.emailService = emailService;
 	}
 	
 //	public static void main(String[] args) {
