@@ -22,11 +22,19 @@ public class LocacaoService {
 	private EmailService emailService;
 	
 	public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws FilmeException, LocadoraException  {
+		boolean negativado;
 		
 		validarUsuario(usuario);
 		validarEstoque(filmes);
 		
-		if (spcService.possuiNegativacao(usuario)) {
+		try {
+			negativado = spcService.possuiNegativacao(usuario);
+			
+		} catch (Exception e) {
+			throw new LocadoraException("Problema com SPC, tente novamente");
+		}
+		
+		if (negativado) {
 			throw new LocadoraException("Usuario negativado !");
 		}
 		
