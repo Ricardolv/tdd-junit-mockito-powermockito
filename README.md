@@ -23,7 +23,7 @@ O teste direcionado por dados é uma maneira poderosa de testar um determinado c
 JUnit fornece algum suporte para testes orientados por dados, através do teste Parameterized.
 
 # Hamcrest 
-Framework que possibilita a criação de regras de verificação (matchers) de forma declarativa. Conforme dito no próprio site do [Hamcrest] (http://hamcrest.org/)
+Framework que possibilita a criação de regras de verificação (matchers) de forma declarativa. Conforme dito no próprio site do [Hamcrest](http://hamcrest.org/)
 
 Um matcher Hamcrest é um objeto que
 
@@ -36,4 +36,7 @@ O conjunto de teste é usado para agrupar alguns casos de teste de unidade e exe
 
 # Builder Pattern
 Em essência, o problema que enfrentamos é que nosso teste de unidade é vinculado ao construtor. Um padrão de design comum para resolver essa dependência é o builder pattern. O builder pattern separa a construção de um objeto complexo de sua representação, de modo que o mesmo processo de construção pode criar diferentes representações, esta é a definição do builder pattern.
+
+# Mockito
+O Mockito é um framework de mocking para uso em testes de unidade na linguagem Java. Ele possui uma API clara e simples. A curva de aprendizado é suave e ele possui uma [documentação](http://static.javadoc.io/org.mockito/mockito-core/2.2.9/org/mockito/Mockito.html) bastante útil, recheada de exemplos.
 

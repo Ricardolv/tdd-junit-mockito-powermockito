@@ -21,6 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 
 import com.richard.tdd.daos.LocacaoDAO;
 import com.richard.tdd.daos.LocacaoDAOFake;
@@ -50,7 +51,7 @@ public class LocacaoServiceTest {
 		locacaoService = new LocacaoService();
 		usuario = umUsuario().agora();
 		filmes = Arrays.asList(umFilme().agora());
-		LocacaoDAO dao = new LocacaoDAOFake();
+		LocacaoDAO dao = Mockito.mock(LocacaoDAO.class);
 		locacaoService.setDao(dao);
 	}
 	
