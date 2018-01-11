@@ -17,7 +17,6 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.richard.tdd.daos.LocacaoDAO;
-import com.richard.tdd.daos.LocacaoDAOFake;
 import com.richard.tdd.exceptions.FilmeException;
 import com.richard.tdd.exceptions.LocadoraException;
 import com.richard.tdd.model.Filme;
@@ -46,6 +45,8 @@ public class CalculoValorLocacaoTest {
 		LocacaoDAO dao = Mockito.mock(LocacaoDAO.class);
 		locacaoService.setDao(dao);
 		usuario = umUsuario().agora();
+		SPCService spcService = Mockito.mock(SPCService.class);
+		locacaoService.setSpcService(spcService);
 		
 	}
 	

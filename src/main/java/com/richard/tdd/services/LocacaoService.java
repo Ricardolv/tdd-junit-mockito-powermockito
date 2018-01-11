@@ -18,11 +18,16 @@ import com.richard.tdd.utils.DataUtils;
 public class LocacaoService {
 	
 	private LocacaoDAO dao;
+	private SPCService spcService;
 	
 	public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws FilmeException, LocadoraException  {
 		
 		validarUsuario(usuario);
 		validarEstoque(filmes);
+		
+		if (spcService.possuiNegativacao(usuario)) {
+			throw new LocadoraException("Usuario negativado !");
+		}
 		
 		Locacao locacao = new Locacao();
 		locacao.setFilmes(filmes);
@@ -95,4 +100,8 @@ public class LocacaoService {
 		this.dao = dao;
 	}
 
+	public void setSpcService(SPCService spcService) {
+		this.spcService = spcService;
+	}
+	
 }

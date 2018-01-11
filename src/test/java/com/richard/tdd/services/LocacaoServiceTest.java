@@ -8,6 +8,7 @@ import static com.richard.tdd.matchers.MatchersProprios.ehHojeComDiferencaDias;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -24,7 +25,6 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import com.richard.tdd.daos.LocacaoDAO;
-import com.richard.tdd.daos.LocacaoDAOFake;
 import com.richard.tdd.exceptions.FilmeException;
 import com.richard.tdd.exceptions.LocadoraException;
 import com.richard.tdd.matchers.MatchersProprios;
@@ -39,6 +39,10 @@ public class LocacaoServiceTest {
 	private Usuario usuario;
 	private List<Filme> filmes;
 	
+	private LocacaoDAO dao;
+	private SPCService spcService;
+	
+	
 	@Rule
 	public ErrorCollector error = new ErrorCollector();
 	
@@ -51,8 +55,10 @@ public class LocacaoServiceTest {
 		locacaoService = new LocacaoService();
 		usuario = umUsuario().agora();
 		filmes = Arrays.asList(umFilme().agora());
-		LocacaoDAO dao = Mockito.mock(LocacaoDAO.class);
+		dao = Mockito.mock(LocacaoDAO.class);
 		locacaoService.setDao(dao);
+		spcService = Mockito.mock(SPCService.class);
+		locacaoService.setSpcService(spcService);
 	}
 	
 	/**
@@ -135,6 +141,21 @@ public class LocacaoServiceTest {
 		
 //		assertThat(retorno.getDataRetorno(), MatchersProprios.caiEm(Calendar.MONDAY));
 		assertThat(retorno.getDataRetorno(), MatchersProprios.caiNumaSegunda());
+	}
+	
+	@Test
+	public void naoDeveAlugarFilmeParaNegativadoSPC() throws FilmeException, LocadoraException {
+		//cenario
+		Usuario usuario = umUsuario().agora();
+		List<Filme> filmes = Arrays.asList(umFilme().agora()) ;
+		
+		when(spcService.possuiNegativacao(usuario)).thenReturn(true);
+		
+		expectedException.expect(LocadoraException.class);
+		expectedException.expectMessage("Usuario negativado !");
+		
+		//acao
+		locacaoService.alugarFilme(usuario, filmes);
 	}
 	
 //	public static void main(String[] args) {
