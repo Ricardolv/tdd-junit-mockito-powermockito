@@ -17,7 +17,7 @@ Padrão Unit usando Junit
 > TestResultFormatter -> Padroniza o formato dos testes.
 > Assertions -> As exceções que verifica o comportamento ao estado do que esta sendo testado através de uma expressões logica.
 
-# Data-driven testing "Teste orientado a dados"
+# Data-driven testing
 
 O teste direcionado por dados é uma maneira poderosa de testar um determinado cenário com diferentes combinações de valores. Existe várias maneiras de fazer testes de unidade orientados por dados no JUnit.
 JUnit fornece algum suporte para testes orientados por dados, através do teste Parameterized.
@@ -30,3 +30,7 @@ Um matcher Hamcrest é um objeto que
 - reporta se um dado objeto satisfaz um determinado critério;
 - pode descrever este critério; e 
 - é capaz de descrever porque um objeto não satisfaz um determinado critério.
+
+# Test Suite
+O conjunto de teste é usado para agrupar alguns casos de teste de unidade e executá-los juntos. Em JUnit, as anotações @RunWith e @Suite são usadas para executar os testes do conjunto, declaramos as classes de testes dentro na suite usando a anotação @SuiteClasses .
+
