@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.richard.tdd.daos.LocacaoDAO;
 import com.richard.tdd.exceptions.FilmeException;
 import com.richard.tdd.exceptions.LocadoraException;
 import com.richard.tdd.model.Filme;
@@ -15,6 +16,8 @@ import com.richard.tdd.model.Usuario;
 import com.richard.tdd.utils.DataUtils;
 
 public class LocacaoService {
+	
+	private LocacaoDAO dao;
 	
 	public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws FilmeException, LocadoraException  {
 		
@@ -54,7 +57,7 @@ public class LocacaoService {
 		locacao.setDataRetorno(dataEntrega);
 		
 		//Salvando a locacao...	
-		//TODO adicionar método para salvar
+		dao.salvar(locacao);
 		
 		return locacao;
 	}
@@ -86,6 +89,10 @@ public class LocacaoService {
 		
 		if (algumFilmeSemEstoque)
 			throw new FilmeException();
+	}
+
+	public void setDao(LocacaoDAO dao) {
+		this.dao = dao;
 	}
 
 }

@@ -15,6 +15,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.richard.tdd.daos.LocacaoDAO;
+import com.richard.tdd.daos.LocacaoDAOFake;
 import com.richard.tdd.exceptions.FilmeException;
 import com.richard.tdd.exceptions.LocadoraException;
 import com.richard.tdd.model.Filme;
@@ -40,6 +42,8 @@ public class CalculoValorLocacaoTest {
 	public void setup() {
 		//cenario
 		locacaoService = new LocacaoService();
+		LocacaoDAO dao = new LocacaoDAOFake();
+		locacaoService.setDao(dao);
 		usuario = umUsuario().agora();
 		
 	}

@@ -22,6 +22,8 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
+import com.richard.tdd.daos.LocacaoDAO;
+import com.richard.tdd.daos.LocacaoDAOFake;
 import com.richard.tdd.exceptions.FilmeException;
 import com.richard.tdd.exceptions.LocadoraException;
 import com.richard.tdd.matchers.MatchersProprios;
@@ -48,7 +50,8 @@ public class LocacaoServiceTest {
 		locacaoService = new LocacaoService();
 		usuario = umUsuario().agora();
 		filmes = Arrays.asList(umFilme().agora());
-		
+		LocacaoDAO dao = new LocacaoDAOFake();
+		locacaoService.setDao(dao);
 	}
 	
 	/**
