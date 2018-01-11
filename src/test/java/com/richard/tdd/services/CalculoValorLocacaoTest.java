@@ -1,5 +1,6 @@
 package com.richard.tdd.services;
 
+import static com.richard.tdd.builders.UsuarioBuilder.umUsuario;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -24,6 +25,7 @@ import com.richard.tdd.model.Usuario;
 public class CalculoValorLocacaoTest {
 	
 	private LocacaoService locacaoService;
+	private Usuario usuario;
 	
 	@Parameter
 	public List<Filme> filmes;
@@ -38,6 +40,7 @@ public class CalculoValorLocacaoTest {
 	public void setup() {
 		//cenario
 		locacaoService = new LocacaoService();
+		usuario = umUsuario().agora();
 		
 	}
 	
@@ -63,8 +66,6 @@ public class CalculoValorLocacaoTest {
 	
 	@Test
 	public void deveCalcularValorLocacaoConsiderandoDesconto() throws FilmeException, LocadoraException {
-		//cenario
-		Usuario usuario = new Usuario("Usuario 1");
 		
 		//acao
 		Locacao resultado = locacaoService.alugarFilme(usuario, filmes);

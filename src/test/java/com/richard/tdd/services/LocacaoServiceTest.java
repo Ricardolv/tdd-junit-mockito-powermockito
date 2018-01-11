@@ -1,5 +1,8 @@
 package com.richard.tdd.services;
 
+import static com.richard.tdd.builders.FilmeBuilder.umFilme;
+import static com.richard.tdd.builders.FilmeBuilder.umFilmeSemEstoque;
+import static com.richard.tdd.builders.UsuarioBuilder.umUsuario;
 import static com.richard.tdd.matchers.MatchersProprios.ehHoje;
 import static com.richard.tdd.matchers.MatchersProprios.ehHojeComDiferencaDias;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -43,9 +46,8 @@ public class LocacaoServiceTest {
 	public void setup() {
 		//cenario
 		locacaoService = new LocacaoService();
-		usuario = new Usuario("Usuario 1");
-		filmes = Arrays.asList(new Filme("Filme 1", 2, 5.0),
-				               new Filme("Filme 2", 3, 6.0));
+		usuario = umUsuario().agora();
+		filmes = Arrays.asList(umFilme().agora());
 		
 	}
 	
@@ -58,11 +60,14 @@ public class LocacaoServiceTest {
 	public void deveAlugarFilme() throws FilmeException, LocadoraException {
 		Assume.assumeFalse(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
 		
+		//cenario 
+		filmes = Arrays.asList(umFilme().comValor(5.0).agora());
+		
 		//acao
 		Locacao locacao = locacaoService.alugarFilme(usuario, filmes);
 		
 		//verificacao
-		error.checkThat(locacao.getValor(), is(equalTo(11.0)));
+		error.checkThat(locacao.getValor(), is(equalTo(5.0)));
 		error.checkThat(locacao.getDataLocacao(), ehHoje());
 		error.checkThat(locacao.getDataRetorno(), ehHojeComDiferencaDias(1));
 	}
@@ -74,7 +79,8 @@ public class LocacaoServiceTest {
 	 */
 	@Test(expected = FilmeException.class)
 	public void naoDeveAlugarFilmeSemEstoque() throws FilmeException, LocadoraException {
-		filmes = Arrays.asList(new Filme("Filme 1", 0, 5.0), new Filme("Filme 2", 2, 5.0));
+		//cenario
+		filmes = Arrays.asList(umFilmeSemEstoque().agora());
 		
 		//acao
 		locacaoService.alugarFilme(usuario, filmes);
@@ -115,8 +121,7 @@ public class LocacaoServiceTest {
 		Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
 
 		//cenario
-		Usuario usuario = new Usuario("Usuario 1");
-		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 5.0));
+		Usuario usuario = umUsuario().agora();
 		
 		//acao 
 		Locacao retorno = locacaoService.alugarFilme(usuario, filmes);

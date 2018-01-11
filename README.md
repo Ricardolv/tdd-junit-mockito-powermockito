@@ -34,3 +34,6 @@ Um matcher Hamcrest é um objeto que
 # Test Suite
 O conjunto de teste é usado para agrupar alguns casos de teste de unidade e executá-los juntos. Em JUnit, as anotações @RunWith e @Suite são usadas para executar os testes do conjunto, declaramos as classes de testes dentro na suite usando a anotação @SuiteClasses .
 
+# Builder Pattern
+Em essência, o problema que enfrentamos é que nosso teste de unidade é vinculado ao construtor. Um padrão de design comum para resolver essa dependência é o builder pattern. O builder pattern separa a construção de um objeto complexo de sua representação, de modo que o mesmo processo de construção pode criar diferentes representações, esta é a definição do builder pattern.
+
