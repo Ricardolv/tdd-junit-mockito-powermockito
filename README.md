@@ -16,3 +16,8 @@ Padrão Unit usando Junit
 > TestSuites -> A onde podemos alocar os testes que devem ser executados.
 > TestResultFormatter -> Padroniza o formato dos testes.
 > Assertions -> As exceções que verifica o comportamento ao estado do que esta sendo testado através de uma expressões logica.
+
+# Data-driven testing "Teste orientado a dados"
+
+O teste direcionado por dados é uma maneira poderosa de testar um determinado cenário com diferentes combinações de valores. Existe várias maneiras de fazer testes de unidade orientados por dados no JUnit.
+JUnit fornece algum suporte para testes orientados por dados, através do teste Parameterized.

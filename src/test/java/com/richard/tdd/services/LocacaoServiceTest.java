@@ -13,7 +13,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -106,92 +105,6 @@ public class LocacaoServiceTest {
 		
 		//acao
 		locacaoService.alugarFilme(usuario, null);
-	}
-	
-	/**
-	 * Deve pagar 75% no fime 3
-	 * @throws LocadoraException 
-	 * @throws FilmeException 
-	 */
-	@Test
-	public void devePagar75PctNoFilme3() throws FilmeException, LocadoraException {
-		//cenario
-		Usuario usuario = new Usuario("Usuario 1");
-		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0), 
-										  new Filme("Filme 2", 2, 4.0), 
-										  new Filme("Filme 3", 2, 4.0));
-		
-		//acao
-		Locacao resultado = locacaoService.alugarFilme(usuario, filmes);
-		
-		//verificacao
-		assertThat(resultado.getValor(), is(11.0));
-	}
-	
-	/**
-	 * Deve pagar 50% no fime 4
-	 * @throws LocadoraException 
-	 * @throws FilmeException 
-	 */
-	@Test
-	public void devePagar50PctNoFilme4() throws FilmeException, LocadoraException {
-		//cenario
-		Usuario usuario = new Usuario("Usuario 1");
-		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0), 
-										  new Filme("Filme 2", 2, 4.0), 
-										  new Filme("Filme 3", 2, 4.0), 
-										  new Filme("Filme 4", 2, 4.0));
-		
-		//acao
-		Locacao resultado = locacaoService.alugarFilme(usuario, filmes);
-		
-		//verificacao
-		assertThat(resultado.getValor(), is(13.0));
-	}
-	
-	/**
-	 * Deve pagar 25% no fime 5
-	 * @throws LocadoraException 
-	 * @throws FilmeException 
-	 */
-	@Test
-	public void devePagar25PctNoFilme5() throws FilmeException, LocadoraException {
-		//cenario
-		Usuario usuario = new Usuario("Usuario 1");
-		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0), 
-										  new Filme("Filme 2", 2, 4.0), 
-										  new Filme("Filme 3", 2, 4.0), 
-										  new Filme("Filme 4", 2, 4.0),
-										  new Filme("Filme 5", 2, 4.0));
-		
-		//acao
-		Locacao resultado = locacaoService.alugarFilme(usuario, filmes);
-		
-		//verificacao
-		assertThat(resultado.getValor(), is(14.0));
-	}
-	
-	/**
-	 * Deve pagar 0% no fime 6
-	 * @throws LocadoraException 
-	 * @throws FilmeException 
-	 */
-	@Test
-	public void devePagar0PctNoFilme6() throws FilmeException, LocadoraException {
-		//cenario
-		Usuario usuario = new Usuario("Usuario 1");
-		List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 4.0), 
-										  new Filme("Filme 2", 2, 4.0), 
-										  new Filme("Filme 3", 2, 4.0), 
-										  new Filme("Filme 4", 2, 4.0),
-										  new Filme("Filme 5", 2, 4.0),
-										  new Filme("Filme 6", 2, 4.0));
-		
-		//acao
-		Locacao resultado = locacaoService.alugarFilme(usuario, filmes);
-		
-		//verificacao
-		assertThat(resultado.getValor(), is(14.0));
 	}
 	
 	//@Ignore
