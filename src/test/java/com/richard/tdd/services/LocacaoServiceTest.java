@@ -1,5 +1,7 @@
 package com.richard.tdd.services;
 
+import static com.richard.tdd.matchers.MatchersProprios.ehHoje;
+import static com.richard.tdd.matchers.MatchersProprios.ehHojeComDiferencaDias;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -61,8 +63,8 @@ public class LocacaoServiceTest {
 		
 		//verificacao
 		error.checkThat(locacao.getValor(), is(equalTo(11.0)));
-		error.checkThat(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()), is(true));
-		error.checkThat(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)), is(true));
+		error.checkThat(locacao.getDataLocacao(), ehHoje());
+		error.checkThat(locacao.getDataRetorno(), ehHojeComDiferencaDias(1));
 	}
 	
 	/**
