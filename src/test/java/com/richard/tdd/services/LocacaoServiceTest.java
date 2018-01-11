@@ -6,12 +6,13 @@ import static com.richard.tdd.builders.LocacaoBuilder.umLocacao;
 import static com.richard.tdd.builders.UsuarioBuilder.umUsuario;
 import static com.richard.tdd.matchers.MatchersProprios.ehHoje;
 import static com.richard.tdd.matchers.MatchersProprios.ehHojeComDiferencaDias;
-import static com.richard.tdd.utils.DataUtils.obterDataComDiferencaDias;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -144,7 +145,7 @@ public class LocacaoServiceTest {
 		Usuario usuario = umUsuario().agora();
 		List<Filme> filmes = Arrays.asList(umFilme().agora()) ;
 		
-		when(spcService.possuiNegativacao(usuario)).thenReturn(true);
+		when(spcService.possuiNegativacao(Mockito.any(Usuario.class))).thenReturn(true);
 		
 		//acao
 		try {
@@ -162,17 +163,34 @@ public class LocacaoServiceTest {
 	public void deveEnviarEmailParaLocacoesAtrasadas() {
 		//cenario
 		Usuario usuario = umUsuario().agora();
-		List<Locacao> locacoes = Arrays.asList(umLocacao()
-												.comUsuario(usuario)
-												.comDataRetorno(obterDataComDiferencaDias(-2))
-												.agora());
+		Usuario usuario2 = umUsuario().comNome("Usuario 2").agora();
+		Usuario usuario3 = umUsuario().comNome("Usuario 3").agora();
+		List<Locacao> locacoes = Arrays.asList(
+				umLocacao().comUsuario(usuario).atrasado().agora(),
+				umLocacao().comUsuario(usuario2).agora(),
+				umLocacao().comUsuario(usuario3).atrasado().agora(),
+				umLocacao().comUsuario(usuario3).atrasado().agora());
 		when(dao.obterLocacoesPendentes()).thenReturn(locacoes);
 		
 		//acao
 		locacaoService.notificarAtrasos();
 		
 		//verificacao
+		
+		//verifica se foi enviado noticacoes por 3 vezes usandos instancia usuario 
+		verify(emailService, Mockito.times(3)).notificarAtraso(Mockito.any(Usuario.class));
+		
+		//deve mandar email
 		verify(emailService).notificarAtraso(usuario);
+		
+		//verifica se pelo meno uma notificacao foi enviado
+		verify(emailService, Mockito.atLeastOnce()).notificarAtraso(usuario3);
+		
+		//nao deve receber email
+		verify(emailService, never()).notificarAtraso(usuario2);
+		
+		//Nada mais deveria acontecer
+		verifyNoMoreInteractions(emailService);
 		
 	}
 

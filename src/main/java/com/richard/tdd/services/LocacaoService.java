@@ -71,9 +71,12 @@ public class LocacaoService {
 	public void notificarAtrasos() {
 		List<Locacao> locacoes = dao.obterLocacoesPendentes();
 		
-		locacoes.forEach(locacao -> {
-			emailService.notificarAtraso(locacao.getUsuario());
-		});
+		locacoes.stream()
+					.filter(locacao -> locacao.getDataRetorno().before(new Date()))
+					.forEach(locacao -> {
+						if (locacao.getDataRetorno().before(new Date()))
+							emailService.notificarAtraso(locacao.getUsuario());
+					});
 	}
 	
 	public Double aplicarRegraDeDesconto(Filme filme, List<Filme> filmes) {

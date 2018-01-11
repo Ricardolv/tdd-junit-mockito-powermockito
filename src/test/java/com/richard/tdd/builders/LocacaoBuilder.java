@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import static com.richard.tdd.builders.FilmeBuilder.umFilme;
 import static com.richard.tdd.builders.UsuarioBuilder.umUsuario;
+import static com.richard.tdd.utils.DataUtils.obterDataComDiferencaDias;
 
 import java.lang.Double;
 import java.util.Date;
@@ -58,6 +59,12 @@ public class LocacaoBuilder {
 
 	public LocacaoBuilder comValor(Double param) {
 		elemento.setValor(param);
+		return this;
+	}
+	
+	public LocacaoBuilder atrasado() {
+		elemento.setDataLocacao(obterDataComDiferencaDias(-4));
+		elemento.setDataRetorno(obterDataComDiferencaDias(-2));
 		return this;
 	}
 
