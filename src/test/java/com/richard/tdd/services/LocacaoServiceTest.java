@@ -3,7 +3,6 @@ package com.richard.tdd.services;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -20,6 +19,7 @@ import org.junit.rules.ExpectedException;
 
 import com.richard.tdd.exceptions.FilmeException;
 import com.richard.tdd.exceptions.LocadoraException;
+import com.richard.tdd.matchers.MatchersProprios;
 import com.richard.tdd.model.Filme;
 import com.richard.tdd.model.Locacao;
 import com.richard.tdd.model.Usuario;
@@ -119,8 +119,11 @@ public class LocacaoServiceTest {
 		//acao 
 		Locacao retorno = locacaoService.alugarFilme(usuario, filmes);
 		
-		boolean ehSegunda  = DataUtils.verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
-		assertTrue(ehSegunda);
+//		boolean ehSegunda  = DataUtils.verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
+//		assertTrue(ehSegunda);
+		
+//		assertThat(retorno.getDataRetorno(), MatchersProprios.caiEm(Calendar.MONDAY));
+		assertThat(retorno.getDataRetorno(), MatchersProprios.caiNumaSegunda());
 	}
 	
 }

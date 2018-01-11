@@ -21,3 +21,12 @@ Padrão Unit usando Junit
 
 O teste direcionado por dados é uma maneira poderosa de testar um determinado cenário com diferentes combinações de valores. Existe várias maneiras de fazer testes de unidade orientados por dados no JUnit.
 JUnit fornece algum suporte para testes orientados por dados, através do teste Parameterized.
+
+# Hamcrest 
+Framework que possibilita a criação de regras de verificação (matchers) de forma declarativa. Conforme dito no próprio site do [Hamcrest] (http://hamcrest.org/)
+
+Um matcher Hamcrest é um objeto que
+
+- reporta se um dado objeto satisfaz um determinado critério;
+- pode descrever este critério; e 
+- é capaz de descrever porque um objeto não satisfaz um determinado critério.
