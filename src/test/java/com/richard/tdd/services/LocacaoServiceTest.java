@@ -27,7 +27,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import com.richard.tdd.daos.LocacaoDAO;
 import com.richard.tdd.exceptions.FilmeException;
@@ -40,42 +43,31 @@ import com.richard.tdd.utils.DataUtils;
 
 public class LocacaoServiceTest {
 	
+	@InjectMocks
+	private LocacaoService locacaoService;
+	
+	@Mock
+	private LocacaoDAO dao;
+	@Mock
+	private SPCService spcService;
+	@Mock
+	private EmailService emailService;
+	@Mock
+	private Usuario usuario;
+	@Mock
+	private List<Filme> filmes;
+
 	@Rule
 	public ErrorCollector error = new ErrorCollector();
-	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
-	
-	private LocacaoDAO dao;
-	private SPCService spcService;
-	private EmailService emailService;
-	
-	private LocacaoService locacaoService;
-	private Usuario usuario;
-	private List<Filme> filmes;
 	
 	@Before
 	public void setup() {
 		//cenario
-		locacaoService = new LocacaoService();
-		usuario = umUsuario().agora();
-		filmes = Arrays.asList(umFilme().agora());
-		
-		dao = Mockito.mock(LocacaoDAO.class);
-		locacaoService.setDao(dao);
-		
-		spcService = Mockito.mock(SPCService.class);
-		locacaoService.setSpcService(spcService);
-		
-		emailService = Mockito.mock(EmailService.class);
-		locacaoService.setEmailService(emailService);
+		MockitoAnnotations.initMocks(this);
 	}
 	
-	/**
-	 * 
-	 * @throws FilmeException
-	 * @throws LocadoraException
-	 */
 	@Test
 	public void deveAlugarFilme() throws FilmeException, LocadoraException {
 		Assume.assumeFalse(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
@@ -132,10 +124,6 @@ public class LocacaoServiceTest {
 		//acao 
 		Locacao retorno = locacaoService.alugarFilme(usuario, filmes);
 		
-//		boolean ehSegunda  = DataUtils.verificarDiaSemana(retorno.getDataRetorno(), Calendar.MONDAY);
-//		assertTrue(ehSegunda);
-		
-//		assertThat(retorno.getDataRetorno(), MatchersProprios.caiEm(Calendar.MONDAY));
 		assertThat(retorno.getDataRetorno(), MatchersProprios.caiNumaSegunda());
 	}
 	
@@ -194,12 +182,4 @@ public class LocacaoServiceTest {
 		
 	}
 
-	public void setEmailService(EmailService emailService) {
-		this.emailService = emailService;
-	}
-	
-//	public static void main(String[] args) {
-//		new BuilderMaster().gerarCodigoClasse(Locacao.class);
-//	}
-	
 }

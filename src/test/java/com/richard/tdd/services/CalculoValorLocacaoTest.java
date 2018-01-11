@@ -14,7 +14,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.richard.tdd.daos.LocacaoDAO;
 import com.richard.tdd.exceptions.FilmeException;
@@ -26,28 +28,24 @@ import com.richard.tdd.model.Usuario;
 @RunWith(Parameterized.class)
 public class CalculoValorLocacaoTest {
 	
+	@InjectMocks
 	private LocacaoService locacaoService;
-	private Usuario usuario;
+	
+	@Mock
+	private LocacaoDAO dao;
+	@Mock
+	private SPCService spcService;
 	
 	@Parameter
 	public List<Filme> filmes;
-	
 	@Parameter(value = 1)
 	public Double valorLocacao;
-	
 	@Parameter(value = 2)
 	public String cenario;
 	
 	@Before
 	public void setup() {
-		//cenario
-		locacaoService = new LocacaoService();
-		LocacaoDAO dao = Mockito.mock(LocacaoDAO.class);
-		locacaoService.setDao(dao);
-		usuario = umUsuario().agora();
-		SPCService spcService = Mockito.mock(SPCService.class);
-		locacaoService.setSpcService(spcService);
-		
+		MockitoAnnotations.initMocks(this);
 	}
 	
 	private static Filme filme1 = new Filme("Filme 1", 2, 4.0);
@@ -72,8 +70,8 @@ public class CalculoValorLocacaoTest {
 	
 	@Test
 	public void deveCalcularValorLocacaoConsiderandoDesconto() throws FilmeException, LocadoraException {
-		
 		//acao
+		Usuario  usuario = umUsuario().agora();
 		Locacao resultado = locacaoService.alugarFilme(usuario, filmes);
 		
 		//verificacao
