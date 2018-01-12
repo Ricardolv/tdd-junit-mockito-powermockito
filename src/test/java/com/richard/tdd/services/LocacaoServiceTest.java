@@ -14,6 +14,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -59,9 +61,8 @@ public class LocacaoServiceTest {
 	@Mock
 	private EmailService emailService;
 	@Mock
-	private Usuario usuario;
-	@Mock
 	private List<Filme> filmes;
+	private Usuario usuario;
 
 	@Rule
 	public ErrorCollector error = new ErrorCollector();
@@ -72,6 +73,8 @@ public class LocacaoServiceTest {
 	public void setup() {
 		//cenario
 		MockitoAnnotations.initMocks(this);
+		usuario = umUsuario().agora();
+		locacaoService = PowerMockito.spy(locacaoService);
 	}
 	
 	@Test
@@ -130,7 +133,6 @@ public class LocacaoServiceTest {
 
 		//cenario
 		filmes = Arrays.asList(umFilme().comValor(5.0).agora());
-		Usuario usuario = umUsuario().agora();
 		
 		PowerMockito.whenNew(Date.class).withNoArguments().thenReturn(DataUtils.obterData(13, 01, 2018));
 		
@@ -144,7 +146,6 @@ public class LocacaoServiceTest {
 	@Test
 	public void naoDeveAlugarFilmeParaNegativadoSPC() throws Exception {
 		//cenario
-		Usuario usuario = umUsuario().agora();
 		List<Filme> filmes = Arrays.asList(umFilme().agora()) ;
 		
 		when(spcService.possuiNegativacao(Mockito.any(Usuario.class))).thenReturn(true);
@@ -164,7 +165,6 @@ public class LocacaoServiceTest {
 	@Test
 	public void deveEnviarEmailParaLocacoesAtrasadas() {
 		//cenario
-		Usuario usuario = umUsuario().agora();
 		Usuario usuario2 = umUsuario().comNome("Usuario 2").agora();
 		Usuario usuario3 = umUsuario().comNome("Usuario 3").agora();
 		List<Locacao> locacoes = Arrays.asList(
@@ -198,7 +198,6 @@ public class LocacaoServiceTest {
 	@Test
 	public void deveTratarErrorNoSpc() throws Exception {
 		//cenario
-		Usuario usuario = umUsuario().agora();
 		List<Filme> filmes = Arrays.asList(umFilme().agora());
 		
 		Mockito.when(spcService.possuiNegativacao(usuario)).thenThrow(new Exception("Falha inesperada"));
@@ -229,6 +228,21 @@ public class LocacaoServiceTest {
 		error.checkThat(locacaoRetornada.getDataLocacao(), ehHoje());
 		error.checkThat(locacaoRetornada.getDataRetorno(), ehHojeComDiferencaDias(tresDias));
 
+	}
+	
+	@Test
+	public void deveAlugarFilme_SemCalcularValor() throws Exception {
+		//cenario 
+		filmes = Arrays.asList(umFilme().agora());
+		
+		doReturn(1.0).when(locacaoService, "calcularValorLocacao", filmes);
+		
+		//acao
+		Locacao locacao = locacaoService.alugarFilme(usuario, filmes);
+		
+		//verificacao
+		assertThat(locacao.getValor(), is(1.0));
+		verifyPrivate(locacaoService).invoke("calcularValorLocacao", filmes);
 	}
 
 }

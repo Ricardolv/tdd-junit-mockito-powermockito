@@ -43,23 +43,8 @@ public class LocacaoService {
 		locacao.setUsuario(usuario);
 		locacao.	setDataLocacao(new Date());
 		
-//		double valores = filmes.stream().collect(Collectors.summingDouble(f -> f.getPrecoLocacao()));	
-		Double valores = 0d;
-		for (int i = 0; i < filmes.size(); i++) {
-			Filme filme = filmes.get(i);
-			double valorFilme = filme.getPrecoLocacao(); 
-			
-			switch (i) {
-				case 2: valorFilme = valorFilme * 0.75; break;
-				case 3: valorFilme = valorFilme * 0.50; break;
-				case 4: valorFilme = valorFilme * 0.25; break;
-				case 5: valorFilme =  0d; break;
-			}
-			
-			valores += valorFilme;
-		}
-		
-		locacao.setValor(valores);
+//		locacao.setValor(filmes.stream().collect(Collectors.summingDouble(f -> f.getPrecoLocacao())));	
+		locacao.setValor(calcularValorLocacao(filmes));
 
 		//Entrega no dia seguinte
 		Date dataEntrega = new Date();
@@ -75,22 +60,35 @@ public class LocacaoService {
 		
 		return locacao;
 	}
+
+	private Double calcularValorLocacao(List<Filme> filmes) {
+		Double valores = 0d;
+		for (int i = 0; i < filmes.size(); i++) {
+			Filme filme = filmes.get(i);
+			double valorFilme = filme.getPrecoLocacao(); 
+			
+			switch (i) {
+				case 2: valorFilme = valorFilme * 0.75; break;
+				case 3: valorFilme = valorFilme * 0.50; break;
+				case 4: valorFilme = valorFilme * 0.25; break;
+				case 5: valorFilme =  0d; break;
+			}
+			
+			valores += valorFilme;
+		}
+		return valores;
+	}
 	
 	public void notificarAtrasos() {
 		List<Locacao> locacoes = dao.obterLocacoesPendentes();
 		
-//		locacoes.stream()
-//					.filter(locacao -> locacao.getDataRetorno().before(new Date()))
-//					.forEach(locacao -> {
-//						if (locacao.getDataRetorno().before(new Date()))
-//							emailService.notificarAtraso(locacao.getUsuario());
-//					});
-		
-		for (Locacao locacao: locacoes) {
-			if (locacao.getDataRetorno().before(new Date())) {
-				emailService.notificarAtraso(locacao.getUsuario());
-			}
-		}
+		locacoes.stream()
+					.filter(locacao -> locacao.getDataRetorno().before(new Date()))
+					.forEach(locacao -> {
+						if (locacao.getDataRetorno().before(new Date()))
+							emailService.notificarAtraso(locacao.getUsuario());
+					});
+
 	}
 	
 	public void prorrogarLocacao(Locacao locacao, int dias) {
