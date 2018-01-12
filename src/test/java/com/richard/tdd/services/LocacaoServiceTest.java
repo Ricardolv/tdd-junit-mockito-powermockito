@@ -25,7 +25,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -40,10 +39,8 @@ import com.richard.tdd.matchers.MatchersProprios;
 import com.richard.tdd.model.Filme;
 import com.richard.tdd.model.Locacao;
 import com.richard.tdd.model.Usuario;
-import com.richard.tdd.runners.ParallelRunner;
 import com.richard.tdd.utils.DataUtils;
 
-@RunWith(ParallelRunner.class)
 public class LocacaoServiceTest {
 	
 	@InjectMocks @Spy

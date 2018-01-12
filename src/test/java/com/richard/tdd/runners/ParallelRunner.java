@@ -23,12 +23,12 @@ public class ParallelRunner extends BlockJUnit4ClassRunner {
 			executor = Executors.newFixedThreadPool(5);
 		}
 
-		@Override
+		//@Override
 		public void schedule(Runnable run) {
 			executor.submit(run);
 		}
 
-		@Override
+		//@Override
 		public void finished() {
 			executor.shutdown();
 			

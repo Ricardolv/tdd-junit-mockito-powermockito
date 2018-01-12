@@ -4,13 +4,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import com.richard.tdd.exceptions.NaoPodeDividirPorZeroException;
 import com.richard.tdd.model.Calculadora;
-import com.richard.tdd.runners.ParallelRunner;
 
-@RunWith(ParallelRunner.class)
+
 public class CalculadoraServiceTest {
 	
 	public static StringBuffer ordem = new StringBuffer();
