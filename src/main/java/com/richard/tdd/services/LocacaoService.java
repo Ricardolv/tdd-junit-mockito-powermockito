@@ -41,13 +41,13 @@ public class LocacaoService {
 		Locacao locacao = new Locacao();
 		locacao.setFilmes(filmes);
 		locacao.setUsuario(usuario);
-		locacao.	setDataLocacao(new Date());
+		locacao.	setDataLocacao(obterData());
 		
 //		locacao.setValor(filmes.stream().collect(Collectors.summingDouble(f -> f.getPrecoLocacao())));	
 		locacao.setValor(calcularValorLocacao(filmes));
 
 		//Entrega no dia seguinte
-		Date dataEntrega = new Date();
+		Date dataEntrega = obterData();
 		dataEntrega = adicionarDias(dataEntrega, 1);
 		if (DataUtils.verificarDiaSemana(dataEntrega, Calendar.SUNDAY)) {
 			dataEntrega = adicionarDias(dataEntrega, 1);
@@ -83,9 +83,9 @@ public class LocacaoService {
 		List<Locacao> locacoes = dao.obterLocacoesPendentes();
 		
 		locacoes.stream()
-					.filter(locacao -> locacao.getDataRetorno().before(new Date()))
+					.filter(locacao -> locacao.getDataRetorno().before(obterData()))
 					.forEach(locacao -> {
-						if (locacao.getDataRetorno().before(new Date()))
+						if (locacao.getDataRetorno().before(obterData()))
 							emailService.notificarAtraso(locacao.getUsuario());
 					});
 
@@ -95,7 +95,7 @@ public class LocacaoService {
 		Locacao novaLocacao = new Locacao();
 		novaLocacao.setUsuario(locacao.getUsuario());
 		novaLocacao.setFilmes(locacao.getFilmes());
-		novaLocacao.setDataLocacao(new Date());
+		novaLocacao.setDataLocacao(obterData());
 		novaLocacao.setDataRetorno(DataUtils.obterDataComDiferencaDias(dias));
 		novaLocacao.setValor(locacao.getValor() * dias);
 		dao.salvar(novaLocacao);
@@ -128,6 +128,10 @@ public class LocacaoService {
 		
 		if (algumFilmeSemEstoque)
 			throw new FilmeException();
+	}
+	
+	protected Date obterData() {
+		return new Date();
 	}
 
 	public void setDao(LocacaoDAO dao) {
