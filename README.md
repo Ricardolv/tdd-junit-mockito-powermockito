@@ -40,3 +40,6 @@ Em essência, o problema que enfrentamos é que nosso teste de unidade é vincul
 # Mockito
 O Mockito é um framework de mocking para uso em testes de unidade na linguagem Java. Ele possui uma API clara e simples. A curva de aprendizado é suave e ele possui uma [documentação](http://static.javadoc.io/org.mockito/mockito-core/2.2.9/org/mockito/Mockito.html) bastante útil, recheada de exemplos.
 
+# PowerMock
+O PowerMock é uma API de extensão para suportar o Mockito. Ele fornece recursos para trabalhar com o Java Reflection API de forma simples para superar os problemas do Mockito, como a falta de habilidade para mockar construtor de um objeto métodos finais, estáticos ou privados.
+
