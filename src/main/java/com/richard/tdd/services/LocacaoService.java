@@ -79,12 +79,18 @@ public class LocacaoService {
 	public void notificarAtrasos() {
 		List<Locacao> locacoes = dao.obterLocacoesPendentes();
 		
-		locacoes.stream()
-					.filter(locacao -> locacao.getDataRetorno().before(new Date()))
-					.forEach(locacao -> {
-						if (locacao.getDataRetorno().before(new Date()))
-							emailService.notificarAtraso(locacao.getUsuario());
-					});
+//		locacoes.stream()
+//					.filter(locacao -> locacao.getDataRetorno().before(new Date()))
+//					.forEach(locacao -> {
+//						if (locacao.getDataRetorno().before(new Date()))
+//							emailService.notificarAtraso(locacao.getUsuario());
+//					});
+		
+		for (Locacao locacao: locacoes) {
+			if (locacao.getDataRetorno().before(new Date())) {
+				emailService.notificarAtraso(locacao.getUsuario());
+			}
+		}
 	}
 	
 	public void prorrogarLocacao(Locacao locacao, int dias) {
