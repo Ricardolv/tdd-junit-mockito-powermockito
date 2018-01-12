@@ -36,6 +36,7 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import com.richard.tdd.daos.LocacaoDAO;
 import com.richard.tdd.exceptions.FilmeException;
@@ -60,7 +61,7 @@ public class LocacaoServiceTest {
 	private SPCService spcService;
 	@Mock
 	private EmailService emailService;
-	@Mock
+
 	private List<Filme> filmes;
 	private Usuario usuario;
 
@@ -73,6 +74,7 @@ public class LocacaoServiceTest {
 	public void setup() {
 		//cenario
 		MockitoAnnotations.initMocks(this);
+		filmes = Arrays.asList(umFilme().agora());
 		usuario = umUsuario().agora();
 		locacaoService = PowerMockito.spy(locacaoService);
 	}
@@ -146,7 +148,6 @@ public class LocacaoServiceTest {
 	@Test
 	public void naoDeveAlugarFilmeParaNegativadoSPC() throws Exception {
 		//cenario
-		List<Filme> filmes = Arrays.asList(umFilme().agora()) ;
 		
 		when(spcService.possuiNegativacao(Mockito.any(Usuario.class))).thenReturn(true);
 		
@@ -198,7 +199,6 @@ public class LocacaoServiceTest {
 	@Test
 	public void deveTratarErrorNoSpc() throws Exception {
 		//cenario
-		List<Filme> filmes = Arrays.asList(umFilme().agora());
 		
 		Mockito.when(spcService.possuiNegativacao(usuario)).thenThrow(new Exception("Falha inesperada"));
 		
@@ -233,7 +233,6 @@ public class LocacaoServiceTest {
 	@Test
 	public void deveAlugarFilme_SemCalcularValor() throws Exception {
 		//cenario 
-		filmes = Arrays.asList(umFilme().agora());
 		
 		doReturn(1.0).when(locacaoService, "calcularValorLocacao", filmes);
 		
@@ -243,6 +242,17 @@ public class LocacaoServiceTest {
 		//verificacao
 		assertThat(locacao.getValor(), is(1.0));
 		verifyPrivate(locacaoService).invoke("calcularValorLocacao", filmes);
+	}
+	
+	@Test
+	public void deveCalcularValorLocacao() throws Exception {
+		//cenario
+		
+		//acao
+		Double valor = (Double) Whitebox.invokeMethod(locacaoService, "calcularValorLocacao", filmes);
+		
+		//verificacao
+		assertThat(valor , is(4.0));
 	}
 
 }
